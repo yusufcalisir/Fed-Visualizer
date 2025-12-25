@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pyc
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Project Specific - Data & Exports
+checkpoints/
+experiments.db
+experiment_*.json
+*.csv
+*.parquet
+*.pkl
+*.pickle
+
+# Logs
+*.log
+logs/
+
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Cache
+.cache/
+.pytest_cache/
