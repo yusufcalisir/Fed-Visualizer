@@ -105,16 +105,30 @@ streamlit run app.py
 
 ---
 
-## 🔬 Mathematical backbone
+## 🔬 Mathematical Backbone
 
-**FedAvg (Aggregation):**
-$$ w_{t+1} = \sum_{k=1}^{K} \frac{n_k}{n} w_{t+1}^k $$
+### Federated Averaging (FedAvg)
+The standard aggregation algorithm that computes the weighted average of client updates.
 
-**Differential Privacy (Gaussian):**
-$$ w_{noisy} = w + \mathcal{N}(0, \sigma^2 I), \quad \sigma = \frac{C \sqrt{2 \ln(1.25/\delta)}}{\epsilon} $$
+```math
+w_{t+1} = \sum_{k=1}^{K} \frac{n_k}{n} w_{t+1}^k
+```
 
-**Momentum (Velocity Vector):**
-$$ v_{t+1} = \beta v_t + (1-\beta) \Delta w, \quad w_{t+1} = w_t + \eta v_{t+1} $$
+### Differential Privacy (Gaussian Mechanism)
+Adds calibrated noise to gradients to preserve user privacy.
+
+```math
+w_{noisy} = w + \mathcal{N}(0, \sigma^2 I)
+\sigma = \frac{C \sqrt{2 \ln(1.25/\delta)}}{\epsilon}
+```
+
+### Server Momentum
+Accelerates convergence by accumulating velocity in the direction of persistent gradients.
+
+```math
+v_{t+1} = \beta v_t + (1-\beta) \Delta w
+w_{t+1} = w_t + \eta v_{t+1}
+```
 
 ---
 
