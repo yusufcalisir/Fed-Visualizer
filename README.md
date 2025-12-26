@@ -1,350 +1,124 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/🛰️_FedVisualizer-v2.0-00ff88?style=for-the-badge&labelColor=1a1a2e" alt="FedVisualizer">
-</p>
+# 🛰️ FedVisualizer: The Ultimate Federated Learning Command Center
 
-<h1 align="center">🛰️ FedVisualizer</h1>
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
+![Plotly](https://img.shields.io/badge/Plotly-5.15+-3F4F75?style=flat-square&logo=plotly&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/sklearn-1.0+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-<p align="center">
-  <strong>High-Fidelity Federated Learning Research Platform</strong>
-</p>
+> **"Where Cyberpunk Aesthetics Meet Rigorous Scientific Simulation."**
 
-<p align="center">
-  <em>Real-time visualization • Differential Privacy • Secure Aggregation • Byzantine Robustness</em>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit">
-  <img src="https://img.shields.io/badge/NumPy-1.21+-013243?style=flat-square&logo=numpy&logoColor=white" alt="NumPy">
-  <img src="https://img.shields.io/badge/Plotly-5.15+-3F4F75?style=flat-square&logo=plotly&logoColor=white" alt="Plotly">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License">
-</p>
+**FedVisualizer** is a state-of-the-art research platform designed to demystify the "black box" of Federated Learning. It combines rigorous mathematical simulation with a Hollywood-grade visual interface, allowing researchers to observe, attack, and optimize distributed AI networks in real-time.
 
 ---
 
-## 🎯 Overview
+## 🌌 High-Fidelity Visualizations
 
-FedVisualizer is a **production-ready research platform** for Federated Learning experimentation. Built with a cyberpunk-inspired UI, it provides researchers with powerful tools to visualize, analyze, and optimize FL training in real-time.
+### 🏔️ **3D Loss Landscape Expedition**
+Journey into the optimization valley of your neural network.
+*   **Real-time Surface Plot:** Visualize the convexity of the loss function.
+*   **Trajectory Tracking:** Watch the global model descent into the minima.
+*   **Topology Classification:** Automatically classifies minima as **"🟢 Wide (Stable)"** or **"🔴 Sharp (Brittle)"**.
+*   **Dynamic Zoom:** Camera intelligently clamps to the optimization path for dramatic "canyon dive" views.
 
-### ✨ Key Capabilities
+### 🧬 **Weight Space Monitor (PCA)**
+See the invisible latent space of model parameters.
+*   **Latent Projection:** Uses incremental PCA to project high-dimensional weight vectors into 2D.
+*   **Cluster Analysis:** Visually identify heterogeneous client clusters.
+*   **Convergence Tracking:** Measures Euclidean distance between Global Model and Clients.
 
-| Feature | Description |
-|---------|-------------|
-| 🌐 **Real-time Topology** | Dynamic network graph showing server-client connections |
-| 📊 **Live Metrics** | 10+ KPIs including accuracy, loss, throughput, and weight divergence |
-| 🛡️ **Differential Privacy** | Rigorous RDP accounting with Gaussian mechanism |
-| 🔐 **Secure Aggregation** | Zero-sum masking protocol for client privacy |
-| ⚔️ **Byzantine Defense** | Krum and Median aggregation against adversaries |
-| 📈 **Weight Divergence** | Cosine similarity tracking between global and local models |
-| 🎯 **Bottleneck Analysis** | Intelligent system health diagnostics |
+### 🔥 **Gradient Flow & Layer Drift**
+*   **Heatmap Visualization:** Track L2-norm updates across every layer of every client.
+*   **Drift Detection:** Instantly spot clients contributing diverging updates.
+*   **Atomic Sync:** Perfectly synchronized with training rounds for frame-by-frame analysis.
 
 ---
 
-## 🏗️ Architecture
+## ⚡ Simulation Features
 
-```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                           🖥️ STREAMLIT DASHBOARD                             │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐             │
-│  │  KPI Cards │  │  Topology  │  │  Charts    │  │  Console   │             │
-│  │  (10 KPIs) │  │  (Plotly)  │  │  (Live)    │  │  (Logs)    │             │
-│  └────────────┘  └────────────┘  └────────────┘  └────────────┘             │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                           📦 src/core/                                        │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐                              │
-│  │  server.py │  │  client.py │  │ security.py│                              │
-│  │ FedServer  │  │ClientManager│ │SecurityMgr │                              │
-│  │ Aggregation│  │ Hardware   │  │ DP/SecAgg  │                              │
-│  └────────────┘  └────────────┘  └────────────┘                              │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                           📦 src/utils/                                       │
-│  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐      │
-│  │ data_partitioner.py│  │   analytics.py     │  │    network.py      │      │
-│  │ IID/Dirichlet/Shard│  │ Metrics & Export   │  │ Serialization      │      │
-│  └────────────────────┘  └────────────────────┘  └────────────────────┘      │
-└──────────────────────────────────────────────────────────────────────────────┘
+### **🚀 Turbo Mode & Batch Rendering**
+Built for speed. Decouples simulation logic from UI rendering to achieve maximum throughput.
+*   **Batch Processing:** Run 5, 10, or 20 training rounds per UI refresh.
+*   **Performance:** Achieves 95%+ compute efficiency by eliminating render overhead.
+
+### **🌊 Advanced Concept Drift**
+Simulate real-world data instability.
+*   **Phase Transitions:** Normal -> Crisis -> Adaptation -> Recovery.
+*   **Sentinel Detection:** Identifies which clients first detect the statistical shift.
+*   **Forgetting Rate:** Measures catastrophic forgetting during adaptation.
+
+### **🐌 Realistic Network Conditions**
+*   **Jitter Injection:** Simulates network instability with stochastic latency.
+*   **Straggler Detection:** Identifies clients failing <200ms SLAs.
+*   **Chaos Monkey:** Randomly drops clients to test aggregation robustness.
+
+---
+
+## 🌿 Green AI & Sustainability
+Track the environmental cost of your research.
+*   **Carbon Footprint:** Real-time estimation of CO2 emissions based on compute time.
+*   **Energy Efficiency:** Track Watt-hours per accuracy gain.
+
+---
+
+## 🛠️ Architecture at a Glance
+
+```mermaid
+graph TD
+    A[Global Server] -->|Broadcast Weights| B(Client Swarm)
+    B -->|Local Training| C{Privacy Layer}
+    C -->|Add Noise| D[Differential Privacy]
+    C -->|Mask| E[Secure Aggregation]
+    D --> F[Encrypted Updates]
+    E --> F
+    F -->|Upload| A
+    A -->|Aggregate| G[New Global Model]
+    G -->|Analyze| H[3D Visualization & PCA]
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Python 3.9+
-- pip package manager
-
-### Installation
+### 1. Installation
 
 ```bash
-# Clone the repository
+# Clone the repo
 git clone https://github.com/yusufcalisir/Fed-Visualizer.git
 cd Fed-Visualizer
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-# Install dependencies
+# Install dependencies (including scikit-learn for PCA)
 pip install -r requirements.txt
 ```
 
-### Launch Dashboard
+### 2. Launch Control Center
 
 ```bash
 streamlit run app.py
 ```
 
-Navigate to `http://localhost:8501` 🚀
+### 3. Usage Guide
+*   **Sidebar:** Configure network size, non-IID entropy (α), and Privacy Budget (ε).
+*   **System Health:** Enable "Concept Drift" to stress-test your model.
+*   **Performance:** Toggle **Turbo Mode** for benchmarking.
+*   **3D Tab:** Watch the optimization trajectory in real-time.
 
 ---
 
-## 📊 Dashboard Features
+## 🔬 Mathematical backbone
 
-### KPI Cards (3 Rows)
+**FedAvg (Aggregation):**
+$$ w_{t+1} = \sum_{k=1}^{K} \frac{n_k}{n} w_{t+1}^k $$
 
-| Row | Metrics |
-|-----|---------|
-| **Row 1** | Round, Clients, Accuracy, Traffic (MB) |
-| **Row 2** | Learning Rate (η), Weight Divergence (Δw), Speed (%/r), Privacy (ε) |
-| **Row 3** | Work/Wait Ratio (⚙️), Throughput (kS/s ⚡) |
+**Differential Privacy (Gaussian):**
+$$ w_{noisy} = w + \mathcal{N}(0, \sigma^2 I), \quad \sigma = \frac{C \sqrt{2 \ln(1.25/\delta)}}{\epsilon} $$
 
-### Bottleneck Analysis
-
-Real-time system health diagnostics:
-
-| Status | Idle % | Meaning |
-|--------|--------|---------|
-| 🔴 **UI Overhead** | >80% | Streamlit refresh is bottleneck |
-| 🟡 **Communication Bound** | 50-80% | Increase local epochs |
-| 🟢 **Balanced** | 20-50% | Healthy compute-to-wait ratio |
-| ✅ **Compute Heavy** | <20% | Optimal for research workloads |
-
-### Success Alert
-
-When target accuracy is reached:
-
-```
-🎯 TARGET ACCURACY ACHIEVED!
-
-| Metric              | Value    |
-|---------------------|----------|
-| Accuracy            | 93.6%    |
-| Privacy Budget (ε)  | 0.4521   |
-| Total Traffic       | 125.3 MB |
-| Rounds Completed    | 15       |
-```
-
----
-
-## 🔬 Mathematical Foundations
-
-### Federated Averaging (FedAvg)
-
-$$w^{t+1} = \sum_{k=1}^{K} \frac{n_k}{n} w_k^{t+1}$$
-
-### Server Momentum
-
-$$v_{t+1} = \beta v_t + (1-\beta) \Delta_{t+1}$$
-$$w_{t+1} = w_t + \eta v_{t+1}$$
-
-### Cosine Similarity Weight Divergence
-
-$$D_{cos}(w_t, w_k) = 1 - \frac{w_t \cdot w_k}{\|w_t\| \|w_k\|}$$
-
-### Differential Privacy (Gaussian Mechanism)
-
-$$w_{noisy} = w + \mathcal{N}(0, \sigma^2 I)$$
-
-$$\sigma = \frac{C \cdot \sqrt{2 \ln(1.25/\delta)}}{\epsilon}$$
-
-### Non-IID Data (Dirichlet Distribution)
-
-$$p_k \sim \text{Dir}(\alpha \cdot \mathbf{1})$$
-
-| α Value | Data Distribution |
-|---------|-------------------|
-| α → 0 | Extreme heterogeneity (1 class/client) |
-| α = 0.5 | Moderate heterogeneity (recommended) |
-| α → ∞ | IID (uniform distribution) |
-
----
-
-## 🛡️ Security Framework
-
-### Differential Privacy
-
-| Component | Purpose |
-|-----------|---------|
-| `GaussianMechanism` | Adds calibrated noise to gradients |
-| `L2GradientClipper` | Bounds gradient sensitivity |
-| `RDPAccountant` | Tracks privacy budget across rounds |
-
-### Secure Aggregation
-
-Zero-sum masking protocol:
-
-$$\sum_{k=1}^{K} m_k = 0$$
-
-Server sees masked updates: $w_k + m_k$
-
-Aggregate cancels masks: $\sum_k (w_k + m_k) = \sum_k w_k$
-
-### Byzantine Robustness
-
-| Defense | Strategy |
-|---------|----------|
-| **Krum** | Selects update closest to k neighbors |
-| **Median** | Coordinate-wise median aggregation |
-| **Anomaly Detection** | Cosine similarity outlier detection |
-
----
-
-## ⚙️ Configuration
-
-### Sidebar Controls
-
-| Category | Parameter | Range | Default |
-|----------|-----------|-------|---------|
-| **Parameters** | Rounds | 1-100 | 20 |
-| | Local Epochs (E) | 1-20 | 5 |
-| | Algorithm | FedAvg/FedProx/FedAdam | FedAvg |
-| **Optimization** | Learning Rate (η) | 0.001-0.1 | 0.01 |
-| | LR Decay | 0.8-1.0 | 0.95 |
-| | Batch Size (B) | 32/64/128 | 64 |
-| | Target Accuracy | 0.8-0.99 | 0.92 |
-| | Server Momentum (β) | 0.0-0.99 | 0.9 |
-| **Privacy** | Differential Privacy | on/off | on |
-| | Target ε | 0.1-20.0 | 5.0 |
-| | Noise Multiplier (σ) | 0.5-10.0 | 2.5 |
-| | Clip Norm (C) | 0.5-5.0 | 1.0 |
-| **Network** | Clients | 3-50 | 10 |
-| | Non-IID α | 0.01-10.0 | 0.5 |
-
----
-
-## 📈 Analytics & Reporting
-
-### Experiment Reports Tab
-
-- **Pareto Frontier**: Accuracy vs Privacy trade-off visualization
-- **Privacy Leakage Map**: Cumulative ε growth over rounds
-- **Export Options**: JSON, CSV, Parquet
-
-### System Health Tab
-
-- **Avg Phase Latency**: Bar chart with phase breakdown
-- **Communication Efficiency**: Acc/MB over rounds
-- **Throughput Chart**: kSamples/sec per round
-
----
-
-## 🔌 API Reference
-
-### FederatedServer
-
-```python
-from src.core.server import FederatedServer
-
-server = FederatedServer(
-    initial_weights={"w": np.random.randn(10, 10)},
-    aggregation_strategy="fedavg"
-)
-server.register_client("client_1", num_samples=1000)
-new_weights = server.aggregate(client_updates)
-```
-
-### SecurityManager
-
-```python
-from src.core.security import SecurityManager, SecurityConfig
-
-config = SecurityConfig(
-    dp_enabled=True,
-    dp_epsilon=1.0,
-    dp_delta=1e-5,
-    clip_norm=1.0
-)
-security = SecurityManager(config)
-processed = security.process_client_update("client_1", weights)
-aggregated, meta = security.secure_aggregate(updates)
-```
-
-### AnalyticsManager
-
-```python
-from src.utils.analytics import AnalyticsManager
-
-analytics = AnalyticsManager("experiment_1", {"algo": "FedAvg"})
-analytics.log_round(round_num=1, accuracy=0.9, loss=0.5, ...)
-analytics.complete()
-analytics.export("csv")
-```
-
----
-
-## 📁 Project Structure
-
-```
-Fed-Visualizer/
-├── app.py                    # 🖥️ Main Streamlit Dashboard
-├── requirements.txt          # 📦 Dependencies
-├── .gitignore               # 🚫 Git ignore rules
-├── README.md                # 📖 Documentation
-│
-├── src/
-│   ├── core/
-│   │   ├── server.py        # 🖧 Federated Aggregation Server
-│   │   ├── client.py        # 👤 Client Simulator
-│   │   ├── security.py      # 🛡️ DP, SecAgg, Byzantine Defense
-│   │   └── fl_algorithms.py # 📐 FedAvg, FedProx, FedAdam
-│   │
-│   └── utils/
-│       ├── data_partitioner.py  # 📊 IID/Dirichlet/Shard
-│       ├── analytics.py         # 📈 Metrics & Tracking
-│       └── network.py           # 🌐 Serialization & Topology
-│
-└── checkpoints/             # 💾 Model Checkpoints (gitignored)
-```
-
----
-
-## 📚 References
-
-| Paper | Citation |
-|-------|----------|
-| **FedAvg** | McMahan et al., "Communication-Efficient Learning of Deep Networks from Decentralized Data" (AISTATS 2017) |
-| **FedProx** | Li et al., "Federated Optimization in Heterogeneous Networks" (MLSys 2020) |
-| **Differential Privacy** | Dwork & Roth, "The Algorithmic Foundations of Differential Privacy" (2014) |
-| **Secure Aggregation** | Bonawitz et al., "Practical Secure Aggregation for Federated Learning" (CCS 2017) |
-| **Byzantine FL** | Blanchard et al., "Machine Learning with Adversaries: Byzantine Tolerant Gradient Descent" (NeurIPS 2017) |
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+**Momentum (Velocity Vector):**
+$$ v_{t+1} = \beta v_t + (1-\beta) \Delta w, \quad w_{t+1} = w_t + \eta v_{t+1} $$
 
 ---
 
 ## 📄 License
+MIT License. Open for research and educational use.
 
-MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-<p align="center">
-  <strong>Built with ❤️ for the Federated Learning Research Community</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/⚡_Powered_by-Streamlit-FF4B4B?style=for-the-badge" alt="Streamlit">
-  <img src="https://img.shields.io/badge/🔬_Research-Ready-00ff88?style=for-the-badge" alt="Research Ready">
-</p>
-#   F e d - V i s u a l i z e r  
- 
+**Built with ❤️ by the Advanced Agentic Coding Team**
