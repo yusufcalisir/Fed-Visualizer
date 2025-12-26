@@ -54,6 +54,26 @@ Fed-Visualizer/
         └── __init__.py
 ```
 
+### 🏗️ Logical Architecture
+
+```text
+STREAMLIT DASHBOARD (app.py)
+├── KPI Cards (10 metrics)
+├── Network Topology (Plotly)
+├── Convergence Charts
+└── Console Logs
+
+src/core/
+├── server.py      → Federated Aggregation
+├── client.py      → Client Simulator
+└── security.py    → DP, SecAgg, Byzantine Defense
+
+src/utils/
+├── data_partitioner.py  → IID/Dirichlet/Shard
+├── analytics.py         → Metrics & Export
+└── network.py           → Serialization
+```
+
 ---
 
 ## 🌌 High-Fidelity Visualizations
