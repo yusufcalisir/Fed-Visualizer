@@ -5,23 +5,24 @@
 ![Plotly](https://img.shields.io/badge/Plotly-5.15+-3F4F75?style=flat-square&logo=plotly&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/sklearn-1.0+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+
+> 🚀 **Live Demo:** [fed-visualizer.streamlit.app](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
 
 > **"Where Cyberpunk Aesthetics Meet Rigorous Scientific Simulation."**
-
+     
 ## 🎯 Overview
-
-![Demo Version Link](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
 
 **FedVisualizer** is a production-ready research platform designed to solve the **"Observability Gap"** in distributed machine learning. While traditional Federated Learning (FL) frameworks focus purely on algorithmic execution, they often act as "black boxes," obscuring critical network dynamics, client heterogeneity, and security vulnerabilities.
 
 ### 🚀 The Mission
 To provide researchers and system architects with a **high-fidelity command center** that bridges the gap between theoretical math and practical deployment.
 *   **Demystify Optimization:** See exactly *how* and *why* a model converges (or diverges) via dynamic 3D Loss Landscapes.
-*   **Stress Test Robustness:** Simulate adversarial conditions including System Stragglers, Concept Drift, and Data Poisoning in a controlled environment.
+*   **Stress Test Robustness:** Simulate adversarial conditions—including System Stragglers, Concept Drift, and Data Poisoning—in a controlled environment.
 *   **Verify Privacy:** Visually confirm the efficacy of Differential Privacy noise and Secure Aggregation protocols.
 
 ### 💡 Core Solution
-Unlike static plotting tools, FedVisualizer acts as a **live, interactive digital twin** of your FL network. It decouples simulation logic from rendering to enable real time observability without compromising training throughput.
+Unlike static plotting tools, FedVisualizer acts as a **live, interactive digital twin** of your FL network. It decouples simulation logic from rendering to enable real-time observability without compromising training throughput.
 
 ---
 
@@ -222,4 +223,4 @@ streamlit run app.py
 
 ---
 
-**Built with ❤️ by Yusuf Calisir**
+**Created by Yusuf Çalışır**
