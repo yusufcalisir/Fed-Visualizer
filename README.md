@@ -56,22 +56,17 @@ Fed-Visualizer/
 
 ### 🏗️ Logical Architecture
 
-```text
-STREAMLIT DASHBOARD (app.py)
-├── KPI Cards (10 metrics)
-├── Network Topology (Plotly)
-├── Convergence Charts
-└── Console Logs
-
-src/core/
-├── server.py      → Federated Aggregation
-├── client.py      → Client Simulator
-└── security.py    → DP, SecAgg, Byzantine Defense
-
-src/utils/
-├── data_partitioner.py  → IID/Dirichlet/Shard
-├── analytics.py         → Metrics & Export
-└── network.py           → Serialization
+```mermaid
+graph TD
+    A[Global Server] -->|Broadcast Weights| B(Client Swarm)
+    B -->|Local Training| C{Privacy Layer}
+    C -->|Add Noise| D[Differential Privacy]
+    C -->|Mask| E[Secure Aggregation]
+    D --> F[Encrypted Updates]
+    E --> F
+    F -->|Upload| A
+    A -->|Aggregate| G[New Global Model]
+    G -->|Analyze| H[3D Visualization & PCA]
 ```
 
 ---
