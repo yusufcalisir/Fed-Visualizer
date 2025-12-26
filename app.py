@@ -72,10 +72,15 @@ st.markdown("""
         background: linear-gradient(135deg, rgba(0,255,242,0.05) 0%, rgba(255,0,255,0.05) 100%);
         border: 1px solid rgba(0, 255, 242, 0.3);
         border-radius: 16px;
-        padding: 24px;
+        padding: 20px;
         position: relative;
         overflow: hidden;
         backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 110px;
+        height: 100%;
     }
     .holo-card::before {
         content: '';
@@ -86,6 +91,7 @@ st.markdown("""
         height: 200%;
         background: linear-gradient(45deg, transparent, rgba(0,255,242,0.03), transparent);
         animation: hologram 3s linear infinite;
+        pointer-events: none;
     }
     @keyframes hologram {
         0% { transform: rotate(0deg); }
@@ -98,14 +104,20 @@ st.markdown("""
         color: rgba(0, 255, 242, 0.7);
         text-transform: uppercase;
         letter-spacing: 3px;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
     }
     .holo-value {
         font-family: 'Orbitron', monospace;
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 700;
         color: #fff;
-        text-shadow: 0 0 20px rgba(0, 255, 242, 0.8), 0 0 40px rgba(0, 255, 242, 0.4);
+        text-shadow: 0 0 20px rgba(0, 255, 242, 0.8);
+    }
+    .holo-delta {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.7rem;
+        margin-top: 8px;
+        min-height: 1rem;
     }
     
     /* Cyber Terminal */
@@ -202,6 +214,76 @@ st.markdown("""
         height: 1px;
         background: linear-gradient(90deg, rgba(0,255,242,0.5), transparent);
     }
+    
+    .cyber-caption {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    /* --- MOBILE RESPONSIVE OPTIMIZATIONS --- */
+    @media (max-width: 768px) {
+        .cyber-title {
+            font-size: 1.6rem !important;
+            letter-spacing: 2px !important;
+            text-align: center;
+        }
+        .stButton button {
+            font-size: 0.8rem !important;
+            padding: 0.5rem !important;
+        }
+        .holo-card {
+            min-height: 90px !important;
+            padding: 12px !important;
+            margin-bottom: 10px;
+        }
+        .holo-value {
+            font-size: 1.4rem !important;
+        }
+        .holo-label {
+            font-size: 0.6rem !important;
+            letter-spacing: 1.5px !important;
+        }
+        .cyber-terminal {
+            height: 200px !important;
+            font-size: 0.65rem !important;
+        }
+        .section-title {
+            font-size: 0.85rem !important;
+            letter-spacing: 1px !important;
+        }
+        .cyber-caption {
+            text-align: center !important;
+        }
+        /* Tighten gaps in streamlit columns for mobile */
+        [data-testid="column"] {
+            padding-bottom: 1rem;
+        }
+        /* Adjust Plotly charts for mobile view */
+        .js-plotly-plot {
+            min-height: 300px;
+        }
+        .header-spacer {
+            display: none;
+        }
+        /* Mobile Tab Tuning */
+        button[data-baseweb="tab"] {
+            font-size: 0.7rem !important;
+            padding: 8px 5px !important;
+        }
+    }
+    
+    .header-spacer {
+        height: 15px;
+    }
+    
+    /* Fine-tune sidebar for thin screens */
+    @media (max-width: 480px) {
+         .cyber-title { font-size: 1.3rem !important; }
+         .holo-value { font-size: 1.2rem !important; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -284,21 +366,31 @@ def create_chart(metrics):
     if not metrics["rounds"]:
         return None
     fig = go.Figure()
+    
+    # Accuracy with Spline Smoothing and Glow
     fig.add_trace(go.Scatter(
         x=metrics["rounds"], y=metrics["acc"], name="Accuracy",
-        line=dict(color='#00fff2', width=3), fill='tozeroy',
+        mode='lines+markers',
+        line=dict(color='#00fff2', width=4, shape='spline'),
+        marker=dict(size=6, color='#fff', line=dict(width=2, color='#00fff2')),
+        fill='tozeroy',
         fillcolor='rgba(0,255,242,0.1)'
     ))
+    
+    # Loss with Dotted Glow
     fig.add_trace(go.Scatter(
         x=metrics["rounds"], y=metrics["loss"], name="Loss",
-        line=dict(color='#ff6b6b', width=2)
+        mode='lines',
+        line=dict(color='#ff6b6b', width=2, dash='dot', shape='spline')
     ))
+    
     fig.update_layout(
         template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(l=0, r=0, t=30, b=0), height=250,
-        legend=dict(orientation='h', y=1.15, x=0.5, xanchor='center'),
-        xaxis=dict(gridcolor='rgba(0,255,242,0.1)', title='Round'),
-        yaxis=dict(gridcolor='rgba(0,255,242,0.1)')
+        legend=dict(orientation='h', y=1.2, x=0.5, xanchor='center', bgcolor='rgba(0,0,0,0)'),
+        xaxis=dict(gridcolor='rgba(0,255,242,0.05)', title='Round', showline=True, linecolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(gridcolor='rgba(0,255,242,0.05)', showline=True, linecolor='rgba(255,255,255,0.1)'),
+        hovermode="x unified"
     )
     return fig
 
@@ -394,73 +486,78 @@ with st.sidebar.expander("⚡ PERFORMANCE", expanded=False):
     ui_refresh_rate = st.slider("UI Refresh Rate", 1, 10, 5, help="Update charts every N rounds (higher = faster)")
     turbo_mode = st.checkbox("🚀 Turbo Mode", False, help="Skip all heavy visualizations during training")
 
-st.sidebar.markdown("---")
-c1, c2 = st.sidebar.columns(2)
-if c1.button("▶ START", type="primary"):
-    st.session_state.running = True
-    st.session_state.round = 0
-    st.session_state.metrics = {"acc": [], "loss": [], "rounds": [], "divergence": [], "lr": []}
-    st.session_state.logs = []
-    st.session_state.traffic = 0.0
-    st.session_state.manifest = None
-    st.session_state.privacy = 0.0
-    st.session_state.current_lr = learning_rate  # Track LR
-    st.session_state.prev_weights = None  # For divergence
-    st.session_state.momentum_buffer = None  # For server momentum
-    st.session_state.efficiency_data = []  # Track Acc/MB over epochs
-    
-    # Reset Module 12-19 states to prevent accumulation across runs
-    st.session_state.weight_space_data = []
-    st.session_state.layer_drift_data = []
-    st.session_state.momentum_history = []
-    st.session_state.throughput_data = []
-    st.session_state.device_tiers = {}
-    st.session_state.client_status = {}
-    st.session_state.reliability_history = []
-    st.session_state.energy_data = {"total_joules": 0.0, "history": []}
-    st.session_state.carbon_history = []
-    st.session_state.personalization_data = []
-    st.session_state.drift_data = {"detected": False, "phase": 1, "adaptation_active": False, "history": []}
-    st.session_state.forgetting_rate = []
-    st.session_state.landscape_trajectory = []
-    
-    # Initialize Security
-    sec_config = SecurityConfig(
-        dp_enabled=dp_on,
-        dp_epsilon=epsilon,
-        dp_delta=0.1, # High delta for immediate visual feedback in dashboard
-        clip_norm=clip_norm,
-        anomaly_detection=True
-    )
-    st.session_state.security = SecurityManager(sec_config)
-    # Manual override of sigma for direct control
-    st.session_state.security.dp.sigma = noise_mult
-    
-    # Initialize Analytics
-    st.session_state.analytics = AnalyticsManager(
-        experiment_name=f"{algo}_{n_clients}c_{alpha}α",
-        config={
-            "aggregation_algo": algo,
-            "num_clients": n_clients,
-            "non_iid_alpha": alpha,
-            "dp_enabled": dp_on,
-            "dp_epsilon": epsilon,
-            "learning_rate": learning_rate,
-            "lr_decay": lr_decay,
-            "batch_size": batch_size,
-            "local_epochs": epochs
-        }
-    )
-if c2.button("■ STOP"):
-    if st.session_state.analytics:
-        st.session_state.analytics.complete()
-    st.session_state.running = False
-    st.session_state.phase = "IDLE"
-    log("Terminated", warn=True)
+# Buttons removed from sidebar as per user request
 
 # --- MAIN ---
-st.markdown('<div class="cyber-title">FEDVISUALIZER</div>', unsafe_allow_html=True)
-st.caption("Real-time Federated Learning Command Center")
+# --- MAIN HEADER ---
+h1, h2 = st.columns([3, 1])
+
+with h1:
+    st.markdown('<div class="cyber-title">FEDVISUALIZER</div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-caption">Real-time Federated Learning Command Center</div>', unsafe_allow_html=True)
+
+with h2:
+    st.markdown('<div class="header-spacer"></div>', unsafe_allow_html=True) # Dynamic Vertical alignment
+    btn_c1, btn_c2 = st.columns(2)
+    with btn_c1:
+        if st.button("▶ START", type="primary", width="stretch"):
+            st.session_state.running = True
+            st.session_state.round = 0
+            st.session_state.metrics = {"acc": [], "loss": [], "rounds": [], "divergence": [], "lr": []}
+            st.session_state.logs = []
+            st.session_state.traffic = 0.0
+            st.session_state.manifest = None
+            st.session_state.privacy = 0.0
+            st.session_state.current_lr = learning_rate
+            st.session_state.prev_weights = None
+            st.session_state.momentum_buffer = None
+            st.session_state.efficiency_data = []
+            
+            st.session_state.weight_space_data = []
+            st.session_state.layer_drift_data = []
+            st.session_state.momentum_history = []
+            st.session_state.throughput_data = []
+            st.session_state.device_tiers = {}
+            st.session_state.client_status = {}
+            st.session_state.reliability_history = []
+            st.session_state.energy_data = {"total_joules": 0.0, "history": []}
+            st.session_state.carbon_history = []
+            st.session_state.personalization_data = []
+            st.session_state.drift_data = {"detected": False, "phase": 1, "adaptation_active": False, "history": []}
+            st.session_state.forgetting_rate = []
+            st.session_state.landscape_trajectory = []
+            
+            sec_config = SecurityConfig(
+                dp_enabled=dp_on,
+                dp_epsilon=epsilon,
+                dp_delta=0.1,
+                clip_norm=clip_norm,
+                anomaly_detection=True
+            )
+            st.session_state.security = SecurityManager(sec_config)
+            st.session_state.security.dp.sigma = noise_mult
+            
+            st.session_state.analytics = AnalyticsManager(
+                experiment_name=f"{algo}_{n_clients}c_{alpha}α",
+                config={
+                    "aggregation_algo": algo,
+                    "num_clients": n_clients,
+                    "non_iid_alpha": alpha,
+                    "dp_enabled": dp_on,
+                    "dp_epsilon": epsilon,
+                    "learning_rate": learning_rate,
+                    "lr_decay": lr_decay,
+                    "batch_size": batch_size,
+                    "local_epochs": epochs
+                }
+            )
+    with btn_c2:
+        if st.button("■ STOP", width="stretch"):
+            if st.session_state.analytics:
+                st.session_state.analytics.complete()
+            st.session_state.running = False
+            st.session_state.phase = "IDLE"
+            log("Terminated", warn=True)
 
 tab_sim, tab_reports, tab_health, tab_xai, tab_3d = st.tabs(["🎮 SIMULATION", "📊 EXPERIMENT REPORTS", "🩺 SYSTEM HEALTH", "👁️ XAI INTERPRETATION", "🏔️ 3D LANDSCAPE"])
 
@@ -561,13 +658,6 @@ with tab_sim:
         st.markdown('<div class="section-title">🌐 Network Topology</div>', unsafe_allow_html=True)
         st.plotly_chart(create_topology(n_clients, st.session_state.active, st.session_state.phase), key="topo")
         
-        st.markdown('<div class="section-title">📈 Convergence</div>', unsafe_allow_html=True)
-        chart = create_chart(st.session_state.metrics)
-        if chart:
-            st.plotly_chart(chart, key="chart")
-        else:
-            st.info("Start simulation to see metrics")
-
     with right:
         st.markdown('<div class="section-title">🖥️ Server Status</div>', unsafe_allow_html=True)
         phase = st.session_state.phase
@@ -609,9 +699,22 @@ with tab_sim:
         else:
             st.caption("Waiting...")
 
-    # Console
-    st.markdown('<div class="section-title">📟 Console</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="cyber-terminal">{"".join(st.session_state.logs[::-1])}</div>', unsafe_allow_html=True)
+    # Combined Row: Convergence & Console
+    st.markdown("<br>", unsafe_allow_html=True)
+    col_conv, col_console = st.columns(2)
+    
+    with col_conv:
+        st.markdown('<div class="section-title">📈 Convergence</div>', unsafe_allow_html=True)
+        chart = create_chart(st.session_state.metrics)
+        if chart:
+            st.plotly_chart(chart, key="chart", width="stretch")
+        else:
+            st.info("Start simulation to see metrics")
+
+    with col_console:
+        st.markdown('<div class="section-title">📟 Console</div>', unsafe_allow_html=True)
+        # Increased height from 160px to 250px to match the chart height
+        st.markdown(f'<div class="cyber-terminal" style="height: 250px;">{"".join(st.session_state.logs[::-1])}</div>', unsafe_allow_html=True)
 
 with tab_reports:
     st.markdown('<div class="section-title">🏆 Experiment Leaderboard</div>', unsafe_allow_html=True)
@@ -620,10 +723,36 @@ with tab_reports:
         if lb:
             import pandas as pd
             df = pd.DataFrame(lb)
-            # Consistent left alignment for all columns
-            st.dataframe(df, column_config={
-                col: st.column_config.TextColumn(col) for col in df.columns
-            })
+            
+            # Pre-processing for better readability
+            if 'accuracy' in df.columns:
+                df['accuracy'] = df['accuracy'].apply(lambda x: float(x))
+            if 'created_at' in df.columns:
+                df['created_at'] = pd.to_datetime(df['created_at']).dt.strftime('%Y-%m-%d %H:%M')
+            
+            # Advanced Column Configuration
+            st.dataframe(
+                df,
+                column_config={
+                    "id": st.column_config.TextColumn("🆔 ID", width="small"),
+                    "name": st.column_config.TextColumn("🏷️ Project Name"),
+                    "created_at": st.column_config.TextColumn("📅 Date"),
+                    "algo": st.column_config.TextColumn("🧠 Algorithm"),
+                    "accuracy": st.column_config.ProgressColumn(
+                        "🎯 Accuracy",
+                        help="Final test accuracy",
+                        format="%.1f%%",
+                        min_value=0,
+                        max_value=1.0,
+                    ),
+                    "status": st.column_config.SelectboxColumn(
+                        "🚦 Status",
+                        options=["completed", "running", "failed"],
+                    )
+                },
+                width="stretch",
+                hide_index=True
+            )
             
             st.markdown("---")
             # Export Controls Row
@@ -658,17 +787,20 @@ with tab_reports:
                         fig.add_trace(go.Scatter(
                             x=p_df["Epsilon"], y=p_df["Accuracy"],
                             mode='lines+markers',
-                            line=dict(color='#00d4ff', width=3),
-                            marker=dict(size=8, color='#ff00ff', line=dict(width=1, color='#fff')),
-                            fill='tonexty'
+                            line=dict(color='#ff00ff', width=4, shape='spline'),
+                            marker=dict(size=8, color='#fff', line=dict(width=2, color='#ff00ff')),
+                            fill='tonexty',
+                            fillcolor='rgba(255,0,255,0.1)'
                         ))
                         fig.update_layout(
                             template="plotly_dark", height=300,
                             margin=dict(l=0, r=0, t=10, b=0),
                             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                            xaxis_title="Privacy Cost (ε)", yaxis_title="Accuracy"
+                            xaxis_title="Privacy Cost (ε)", yaxis_title="Accuracy",
+                            xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                            yaxis=dict(gridcolor='rgba(255,255,255,0.05)')
                         )
-                        st.plotly_chart(fig)
+                        st.plotly_chart(fig, width="stretch")
                     else:
                         st.info("Gathering more data points for Pareto Frontier...")
                 else:
@@ -687,19 +819,22 @@ with tab_reports:
                         fig_leak.add_trace(go.Scatter(
                             x=rounds_h, y=eps_h,
                             fill='tozeroy',
+                            fillcolor='rgba(0,255,136,0.1)',
                             mode='lines',
-                            line=dict(color='#ff00ff', width=2),
+                            line=dict(color='#00ff88', width=3, shape='spline'),
                             name='Cumulative ε'
                         ))
-                        fig_leak.add_hline(y=epsilon, line_dash="dash", line_color="#00ff88", annotation_text="Limit")
+                        fig_leak.add_hline(y=epsilon, line_dash="dash", line_color="#ff00ff", annotation_text="Limit")
                         
                         fig_leak.update_layout(
                             template="plotly_dark", height=300,
                             margin=dict(l=0, r=0, t=10, b=0),
                             paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
-                            xaxis_title="Rounds", yaxis_title="Cumulative ε"
+                            xaxis_title="Rounds", yaxis_title="Cumulative ε",
+                            xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                            yaxis=dict(gridcolor='rgba(255,255,255,0.05)')
                         )
-                        st.plotly_chart(fig_leak)
+                        st.plotly_chart(fig_leak, width="stretch")
                     else:
                         st.info("Privacy ledger is initializing...")
                 else:
@@ -707,21 +842,35 @@ with tab_reports:
         
         # MODULE 16: Algorithm Arena - Comparative Analytics
         st.markdown("---")
-        st.markdown("### 🏟️ Algorithm Arena (Comparative Analytics)")
+        st.markdown('<div class="section-title">🏟️ Algorithm Arena (Comparative Analytics)</div>', unsafe_allow_html=True)
         
         arena_c1, arena_c2 = st.columns([1, 2])
         
         with arena_c1:
-            st.markdown("**📊 Current Run Info**")
-            st.metric("Algorithm", algo)
-            if algo == "FedProx":
-                st.metric("Proximal μ", f"{prox_mu:.3f}")
-            if chaos_enabled:
-                st.success("🎲 Chaos Mode: ACTIVE")
-            else:
-                st.info("🎲 Chaos Mode: OFF")
+            st.markdown('<div class="section-title">📊 Current Run Info</div>', unsafe_allow_html=True)
             
-            # Store experiment signature
+            # Algorithm Glow Card
+            st.markdown(f'''
+                <div class="holo-card" style="margin-bottom: 20px;">
+                    <div class="holo-label">ALGORITHM</div>
+                    <div class="holo-value" style="font-size: 1.8rem; color: #ff00ff; text-shadow: 0 0 15px rgba(255,0,255,0.6);">{algo}</div>
+                    {"<div style='color: #00d4ff; font-family: Orbitron; font-size: 0.8rem; margin-top:5px;'>μ = " + f"{prox_mu:.3f}" + "</div>" if algo == "FedProx" else ""}
+                </div>
+            ''', unsafe_allow_html=True)
+            
+            # Chaos Mode Indicator
+            chaos_color = "#00ff88" if chaos_enabled else "#444"
+            chaos_glow = "0 0 15px #00ff88" if chaos_enabled else "none"
+            st.markdown(f'''
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px; background: rgba(255,255,255,0.03); padding: 8px 15px; border-radius: 4px; border-left: 3px solid {chaos_color};">
+                    <div style="width: 8px; height: 8px; background: {chaos_color}; border-radius: 50%; box-shadow: {chaos_glow};"></div>
+                    <span style="font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; color: {chaos_color if chaos_enabled else '#888'};">
+                        CHAOS MODE: {"ACTIVE" if chaos_enabled else "OFF"}
+                    </span>
+                </div>
+            ''', unsafe_allow_html=True)
+            
+            # Summary Section
             if st.session_state.metrics["acc"]:
                 final_acc = st.session_state.metrics["acc"][-1] * 100
                 rounds_done = len(st.session_state.metrics["acc"])
@@ -733,14 +882,33 @@ with tab_reports:
                         rounds_to_85 = i + 1
                         break
                 
-                st.markdown("**📈 Summary**")
-                st.write(f"Final Accuracy: **{final_acc:.1f}%**")
-                st.write(f"Total Rounds: **{rounds_done}**")
+                st.markdown('<div class="section-title">📈 Summary</div>', unsafe_allow_html=True)
+                
+                summ_c1, summ_c2 = st.columns(2)
+                with summ_c1:
+                    st.markdown(f'''
+                        <div class="holo-card" style="padding: 12px;">
+                            <div class="holo-label" style="font-size: 0.55rem;">FINAL ACC</div>
+                            <div class="holo-value" style="font-size: 1.2rem; color: #00fff2;">{final_acc:.1f}%</div>
+                        </div>
+                    ''', unsafe_allow_html=True)
+                with summ_c2:
+                    st.markdown(f'''
+                        <div class="holo-card" style="padding: 12px;">
+                            <div class="holo-label" style="font-size: 0.55rem;">ROUNDS</div>
+                            <div class="holo-value" style="font-size: 1.2rem; color: #fff;">{rounds_done}</div>
+                        </div>
+                    ''', unsafe_allow_html=True)
+                
                 if rounds_to_85:
-                    st.write(f"Rounds to 85%: **{rounds_to_85}**")
+                    st.markdown(f'''
+                        <div style="margin-top: 15px; padding: 10px; border: 1px dashed rgba(0,255,242,0.2); border-radius: 8px; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: #ccc;">
+                            🚀 Reached 85% target in <b style="color:#00fff2; font-family: Orbitron;">{rounds_to_85}</b> rounds
+                        </div>
+                    ''', unsafe_allow_html=True)
         
         with arena_c2:
-            st.markdown("**📈 Accuracy Comparison**")
+            st.markdown('<div class="section-title">📊 Accuracy Comparison</div>', unsafe_allow_html=True)
             
             if st.session_state.metrics["acc"] and len(st.session_state.metrics["acc"]) > 1:
                 # Create comparison chart
@@ -757,9 +925,11 @@ with tab_reports:
                     x=rounds_data,
                     y=acc_data,
                     mode='lines+markers',
-                    line=dict(color=algo_colors.get(algo, "#00d4ff"), width=3),
-                    marker=dict(size=8),
-                    name=f"{algo} (μ={prox_mu:.2f})" if algo == "FedProx" else algo
+                    line=dict(color=algo_colors.get(algo, "#00d4ff"), width=4, shape='spline'),
+                    marker=dict(size=10, color='#fff', line=dict(width=2, color=algo_colors.get(algo, "#00d4ff"))),
+                    name=f"{algo} (μ={prox_mu:.2f})" if algo == "FedProx" else algo,
+                    fill='tozeroy',
+                    fillcolor=f"rgba({int(algo_colors.get(algo, '#00d4ff')[1:3], 16)}, {int(algo_colors.get(algo, '#00d4ff')[3:5], 16)}, {int(algo_colors.get(algo, '#00d4ff')[5:7], 16)}, 0.1)"
                 ))
                 
                 # Add reference line for FedAvg baseline (simulated)
@@ -767,16 +937,16 @@ with tab_reports:
                     # Simulate what FedAvg would look like (more variance)
                     fedavg_sim = []
                     for i, acc in enumerate(acc_data):
-                        noise = np.random.randn() * 3  # More variance for FedAvg
+                        noise = np.random.randn() * 3
                         fedavg_sim.append(max(50, min(100, acc - 2 + noise)))
                     
                     fig_arena.add_trace(go.Scatter(
                         x=rounds_data,
                         y=fedavg_sim,
                         mode='lines',
-                        line=dict(color="#3498db", width=2, dash='dash'),
-                        opacity=0.5,
-                        name="FedAvg (baseline est.)"
+                        line=dict(color="#3498db", width=2, dash='dot', shape='spline'),
+                        opacity=0.6,
+                        name="FedAvg Baseline (Est.)"
                     ))
                 
                 fig_arena.update_layout(
@@ -785,11 +955,13 @@ with tab_reports:
                     plot_bgcolor='rgba(0,0,0,0)',
                     xaxis_title="Round",
                     yaxis_title="Accuracy (%)",
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
                     margin=dict(l=0, r=0, t=10, b=0),
-                    height=250,
-                    legend=dict(orientation='h', yanchor='bottom', y=1.02)
+                    height=300,
+                    legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)')
                 )
-                st.plotly_chart(fig_arena)
+                st.plotly_chart(fig_arena, width="stretch")
                 
                 # Resilience indicator
                 if chaos_enabled and algo == "FedProx":
@@ -800,32 +972,73 @@ with tab_reports:
         st.info("No experiment history database found.")
 
 with tab_health:
-    st.markdown('<div class="section-title">🩺 System Metrics</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🩺 System Health Diagnostics</div>', unsafe_allow_html=True)
     if st.session_state.analytics:
         summary = st.session_state.analytics.get_summary()
+        
         c1, c2, c3, c4, c5 = st.columns(5)
         with c1:
-            st.metric("Efficiency Score", f"{summary['system_efficiency']*100:.1f}%")
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(0,255,242,0.5);">
+                    <div class="holo-label">Efficiency ⚡</div>
+                    <div class="holo-value" style="color: #00fff2;">{summary['system_efficiency']*100:.1f}%</div>
+                    <div class="holo-delta" style="color: rgba(0,255,242,0.3);">Optimal Range</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with c2:
-            st.metric("Comm. Efficiency", f"{summary['communication_efficiency']:.4f} Acc/MB")
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(0,212,255,0.5);">
+                    <div class="holo-label">Acc/MB 📊</div>
+                    <div class="holo-value" style="color: #00d4ff;">{summary['communication_efficiency']:.4f}</div>
+                    <div class="holo-delta" style="color: rgba(0,212,255,0.3);">Network Cost</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with c3:
-            st.metric("Total Time", f"{summary['total_time_s']:.1f}s")
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(255,255,255,0.2);">
+                    <div class="holo-label">Total Time ⏱️</div>
+                    <div class="holo-value" style="color: #fff;">{summary['total_time_s']:.1f}s</div>
+                    <div class="holo-delta" style="color: rgba(255,255,255,0.2);">Execution Wall</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with c4:
-            # System Reliability
             if st.session_state.reliability_history:
                 latest_rel = st.session_state.reliability_history[-1]
                 avg_reliability = np.mean([r['reliability'] for r in st.session_state.reliability_history])
-                st.metric("🛡️ Reliability", f"{avg_reliability*100:.1f}%", delta=f"{latest_rel['dropouts']} drops")
+                rel_val = f"{avg_reliability*100:.1f}%"
+                delta_txt = f"↑ {latest_rel['dropouts']} drops"
+                delta_color = "#ff6b6b" if latest_rel['dropouts'] > 0 else "#00ff88"
             else:
-                st.metric("🛡️ Reliability", "100%")
+                rel_val = "100%"
+                delta_txt = "Stable Ops"
+                delta_color = "#00ff88"
+            
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(0,255,136,0.5);">
+                    <div class="holo-label">Reliability 🛡️</div>
+                    <div class="holo-value" style="color: #00ff88;">{rel_val}</div>
+                    <div class="holo-delta" style="color: {delta_color};">{delta_txt}</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with c5:
-            # Straggler Count
             if st.session_state.reliability_history:
                 latest_rel = st.session_state.reliability_history[-1]
                 total_stragglers = sum(r['stragglers'] for r in st.session_state.reliability_history)
-                st.metric("🐢 Stragglers", f"{total_stragglers}", delta=f"{latest_rel['stragglers']} this round")
+                strag_val = f"{total_stragglers}"
+                delta_txt = f"↑ +{latest_rel['stragglers']}"
+                delta_color = "#ffff00" if latest_rel['stragglers'] > 0 else "#00d4ff"
             else:
-                st.metric("🐢 Stragglers", "0")
+                strag_val = "0"
+                delta_txt = "Active Sync"
+                delta_color = "#00d4ff"
+                
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(255,255,0,0.5);">
+                    <div class="holo-label">Stragglers 🐢</div>
+                    <div class="holo-value" style="color: #ffff00;">{strag_val}</div>
+                    <div class="holo-delta" style="color: {delta_color};">{delta_txt}</div>
+                </div>
+            ''', unsafe_allow_html=True)
             
         st.markdown("---")
         avg_times = st.session_state.analytics.health.get_average_times()
@@ -840,9 +1053,12 @@ with tab_health:
                     x=labels, 
                     y=values,
                     marker=dict(
-                        color=['#00ff88', '#00d4ff', '#ff00ff', '#ffff00'],
-                        line=dict(color='#ffffff', width=1)
-                    )
+                        color=['rgba(0, 255, 136, 0.4)', 'rgba(0, 212, 255, 0.4)', 'rgba(255, 0, 255, 0.4)', 'rgba(255, 255, 0, 0.4)'],
+                        line=dict(color=['#00ff88', '#00d4ff', '#ff00ff', '#ffff00'], width=2)
+                    ),
+                    text=[f"{v:.3f}s" for v in values],
+                    textposition='outside',
+                    textfont=dict(color="#fff", size=10, family="Rajdhani")
                 )
             ])
             
@@ -852,11 +1068,13 @@ with tab_health:
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 yaxis_title="Time (s)",
-                xaxis=dict(tickfont=dict(size=12, color="#ddd")),
-                margin=dict(l=0, r=0, t=40, b=0),
-                height=250
+                yaxis=dict(gridcolor='rgba(255,255,255,0.05)', zeroline=False),
+                xaxis=dict(tickfont=dict(size=12, color="#ddd"), showgrid=False),
+                margin=dict(l=0, r=0, t=50, b=0),
+                height=300,
+                bargap=0.5
             )
-            st.plotly_chart(fig_perf)
+            st.plotly_chart(fig_perf, width="stretch")
             
             # Communication Efficiency Chart (Acc/MB over rounds)
             if hasattr(st.session_state, 'efficiency_data') and st.session_state.efficiency_data:
@@ -869,9 +1087,10 @@ with tab_health:
                 fig_eff.add_trace(go.Scatter(
                     x=rounds_e, y=acc_per_mb,
                     mode='lines+markers',
-                    line=dict(color='#00ff88', width=3),
-                    marker=dict(size=8, color='#ff00ff', line=dict(width=1, color='#fff')),
+                    line=dict(color='#00ff88', width=4, shape='spline'),
+                    marker=dict(size=8, color='#fff', line=dict(width=2, color='#ff00ff')),
                     fill='tozeroy',
+                    fillcolor='rgba(0,255,136,0.1)',
                     name='Efficiency'
                 ))
                 
@@ -882,10 +1101,12 @@ with tab_health:
                     plot_bgcolor='rgba(0,0,0,0)',
                     xaxis_title="Round",
                     yaxis_title="Acc/MB (×10³)",
-                    margin=dict(l=0, r=0, t=40, b=0),
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    margin=dict(l=0, r=0, t=50, b=0),
                     height=250
                 )
-                st.plotly_chart(fig_eff)
+                st.plotly_chart(fig_eff, width="stretch")
             
             # Throughput Chart (Samples/sec over rounds)
             if hasattr(st.session_state, 'throughput_data') and st.session_state.throughput_data:
@@ -897,7 +1118,10 @@ with tab_health:
                 fig_thru = go.Figure()
                 fig_thru.add_trace(go.Bar(
                     x=rounds_t, y=throughputs,
-                    marker=dict(color='#00d4ff', line=dict(width=1, color='#fff')),
+                    marker=dict(
+                        color='rgba(0, 212, 255, 0.4)',
+                        line=dict(color='#00d4ff', width=2)
+                    ),
                     name='Throughput'
                 ))
                 
@@ -908,10 +1132,12 @@ with tab_health:
                     plot_bgcolor='rgba(0,0,0,0)',
                     xaxis_title="Round",
                     yaxis_title="kSamples/s",
-                    margin=dict(l=0, r=0, t=40, b=0),
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    margin=dict(l=0, r=0, t=50, b=0),
                     height=200
                 )
-                st.plotly_chart(fig_thru)
+                st.plotly_chart(fig_thru, width="stretch")
         
         # MODULE 12: Weight Space Monitor (Latent Space Visualization)
         st.markdown("---")
@@ -1163,8 +1389,8 @@ with tab_health:
                     x=pers_df['round'],
                     y=pers_df['global_acc'] * 100,
                     mode='lines+markers',
-                    line=dict(color='#3498db', width=3),
-                    marker=dict(size=6),
+                    line=dict(color='#00d4ff', width=4, shape='spline'),
+                    marker=dict(size=8, color='#fff', line=dict(width=2, color='#00d4ff')),
                     name='🌐 Global Model'
                 ))
                 
@@ -1173,8 +1399,8 @@ with tab_health:
                     x=pers_df['round'],
                     y=pers_df['personalized_acc'] * 100,
                     mode='lines+markers',
-                    line=dict(color='#f1c40f', width=3),
-                    marker=dict(size=6),
+                    line=dict(color='#f1c40f', width=4, shape='spline'),
+                    marker=dict(size=8, color='#fff', line=dict(width=2, color='#f1c40f')),
                     name='👤 Personalized'
                 ))
                 
@@ -1183,9 +1409,9 @@ with tab_health:
                     x=list(pers_df['round']) + list(pers_df['round'])[::-1],
                     y=list(pers_df['global_acc'] * 100) + list(pers_df['personalized_acc'] * 100)[::-1],
                     fill='toself',
-                    fillcolor='rgba(241, 196, 15, 0.2)',
+                    fillcolor='rgba(241, 196, 15, 0.1)',
                     line=dict(width=0),
-                    name='Gap',
+                    name='Personalization Gap',
                     showlegend=False
                 ))
                 
@@ -1196,11 +1422,13 @@ with tab_health:
                     plot_bgcolor='rgba(0,0,0,0)',
                     xaxis_title="Round",
                     yaxis_title="Accuracy (%)",
-                    margin=dict(l=40, r=120, t=50, b=40),
-                    height=250,
-                    legend=dict(x=1.02, y=0.5, xanchor='left', yanchor='middle')
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                    margin=dict(l=0, r=0, t=50, b=0),
+                    height=300,
+                    legend=dict(orientation='h', y=1.2, x=0.5, xanchor='center', bgcolor='rgba(0,0,0,0)')
                 )
-                st.plotly_chart(fig_pers)
+                st.plotly_chart(fig_pers, width="stretch")
             
             # Client-specific view
             if pers_df.iloc[-1]['per_client']:
@@ -1214,11 +1442,18 @@ with tab_health:
                 fig_client.add_trace(go.Bar(
                     x=client_names,
                     y=client_accs,
-                    marker=dict(color='#f1c40f', line=dict(color='#fff', width=1)),
+                    marker=dict(
+                        color='rgba(241, 196, 15, 0.3)', 
+                        line=dict(color='#f1c40f', width=2)
+                    ),
+                    text=[f"{v:.1f}%" for v in client_accs],
+                    textposition='outside',
+                    textfont=dict(color="#fff", family="Rajdhani"),
                     name='Personalized'
                 ))
-                fig_client.add_hline(y=global_baseline, line_dash="dash", line_color="#3498db", 
-                                     annotation_text=f"Global: {global_baseline:.1f}%")
+                fig_client.add_hline(y=global_baseline, line_dash="dash", line_color="#00d4ff", 
+                                     annotation_text=f"Global Baseline: {global_baseline:.1f}%",
+                                     annotation_position="top right")
                 
                 fig_client.update_layout(
                     template="plotly_dark",
@@ -1226,10 +1461,13 @@ with tab_health:
                     plot_bgcolor='rgba(0,0,0,0)',
                     xaxis_title="Client",
                     yaxis_title="Personalized Acc (%)",
-                    margin=dict(l=0, r=0, t=10, b=0),
-                    height=180
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.05)', range=[0, 110]),
+                    xaxis=dict(showgrid=False),
+                    margin=dict(l=0, r=0, t=30, b=0),
+                    height=250,
+                    bargap=0.4
                 )
-                st.plotly_chart(fig_client)
+                st.plotly_chart(fig_client, width="stretch")
                 
             st.info("💡 **Insight:** Personalized models consistently outperform the global model in Non-IID settings!")
         else:
@@ -1312,14 +1550,20 @@ with tab_health:
                     fig_forget.add_trace(go.Bar(
                         x=forget_df['round'],
                         y=forget_df['new_task_acc'] * 100,
-                        name='New Task',
-                        marker=dict(color='#2ecc71')
+                        name='New Task (Future)',
+                        marker=dict(
+                            color='rgba(0, 255, 136, 0.3)',
+                            line=dict(color='#00ff88', width=2)
+                        )
                     ))
                     fig_forget.add_trace(go.Bar(
                         x=forget_df['round'],
                         y=forget_df['old_task_acc'] * 100,
-                        name='Old Task',
-                        marker=dict(color='#3498db')
+                        name='Old Task (Past)',
+                        marker=dict(
+                            color='rgba(0, 212, 255, 0.3)',
+                            line=dict(color='#00d4ff', width=2)
+                        )
                     ))
                     fig_forget.update_layout(
                         template="plotly_dark",
@@ -1328,11 +1572,14 @@ with tab_health:
                         barmode='group',
                         xaxis_title="Round",
                         yaxis_title="Accuracy (%)",
+                        xaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
+                        yaxis=dict(gridcolor='rgba(255,255,255,0.05)'),
                         margin=dict(l=0, r=0, t=10, b=0),
-                        height=180,
-                        legend=dict(orientation='h', yanchor='bottom', y=1.02)
+                        height=220,
+                        bargap=0.3,
+                        legend=dict(orientation='h', yanchor='bottom', y=1.02, bgcolor='rgba(0,0,0,0)')
                     )
-                    st.plotly_chart(fig_forget)
+                    st.plotly_chart(fig_forget, width="stretch")
         else:
             if drift_enabled:
                 st.info(f"🌊 Concept drift will trigger at Round {drift_round}...")
@@ -1346,19 +1593,25 @@ with tab_xai:
     st.markdown('<div class="section-title">👁️ Explainable AI (XAI) - Model Interpretation</div>', unsafe_allow_html=True)
     st.caption("Visualize what the model 'sees' when making predictions")
     
-    # XAI Controls
-    xai_col1, xai_col2, xai_col3 = st.columns([1, 1, 2])
+    # XAI Scanner Interface
+    st.markdown("""
+        <div style="background: rgba(0, 255, 242, 0.03); border-left: 4px solid #00fff2; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
+            <div style="font-family: 'Orbitron'; font-size: 0.8rem; color: #00fff2; letter-spacing: 2px; margin-bottom: 10px;">⚡ SYSTEM DIAGNOSTICS CONFIGURATION</div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    xai_col1, xai_col2, xai_col3 = st.columns([1.5, 2, 1])
     
     with xai_col1:
-        # Generate list of clients
         client_list = [f"client_{i+1}" for i in range(n_clients)]
-        selected_client = st.selectbox("🎯 Select Client", client_list, key="xai_client")
+        selected_client = st.selectbox("🎯 Target Entity", client_list, key="xai_client")
     
     with xai_col2:
-        digit_class = st.slider("🔢 Target Digit", 0, 9, 5, help="Generate sample of this digit")
+        digit_class = st.slider("🔢 Pattern Signature (Digit)", 0, 9, 5)
     
     with xai_col3:
-        generate_btn = st.button("🔍 Generate Saliency Map")
+        st.write("") # Spacer
+        generate_btn = st.button("🔍 SCAN MODEL", width="stretch", type="primary")
     
     st.markdown("---")
     
@@ -1409,9 +1662,16 @@ with tab_xai:
         vis_col1, vis_col2, vis_col3 = st.columns(3)
         
         with vis_col1:
-            st.markdown("**📷 Original Image**")
+            st.markdown("""
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <span style="font-family: 'Orbitron'; color: #888; font-size: 0.7rem;">[ 📷 RAW_DATA_CAPTURE ]</span>
+                </div>
+                <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; background: rgba(0,0,0,0.2); padding: 10px; position: relative;">
+                    <div style="position: absolute; top: -1px; left: 10%; width: 20%; height: 2px; background: #00d4ff;"></div>
+            """, unsafe_allow_html=True)
+            
             fig_orig = go.Figure(data=go.Heatmap(
-                z=base_img[::-1],  # Flip for correct orientation
+                z=base_img[::-1],
                 colorscale='Gray',
                 showscale=False
             ))
@@ -1419,43 +1679,58 @@ with tab_xai:
                 template="plotly_dark",
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                margin=dict(l=0, r=0, t=0, b=0),
-                height=250,
+                margin=dict(l=5, r=5, t=5, b=5),
+                height=220,
                 xaxis=dict(showticklabels=False, showgrid=False),
                 yaxis=dict(showticklabels=False, showgrid=False, scaleanchor="x", scaleratio=1)
             )
-            st.plotly_chart(fig_orig)
-            st.caption(f"Client: {selected_client} | Sample Digit: {digit_class}")
+            st.plotly_chart(fig_orig, width="stretch")
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.caption(f"Target: {selected_client} | Signature: {digit_class}")
         
         with vis_col2:
-            st.markdown("**🔥 Saliency Heatmap**")
+            st.markdown("""
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <span style="font-family: 'Orbitron'; color: #ff0066; font-size: 0.7rem;">[ 🔥 SALIENCY_MAP_SCAN ]</span>
+                </div>
+                <div style="border: 1px solid rgba(255,0,102,0.2); border-radius: 8px; background: rgba(255,0,102,0.02); padding: 10px; position: relative;">
+                    <div style="position: absolute; top: -1px; right: 10%; width: 20%; height: 2px; background: #ff0066;"></div>
+            """, unsafe_allow_html=True)
+            
             fig_sal = go.Figure(data=go.Heatmap(
                 z=saliency[::-1],
-                colorscale='Hot',
-                showscale=True,
-                colorbar=dict(title='Attention')
+                colorscale=[[0, 'rgba(0,0,0,0)'], [0.5, '#ff0066'], [1, '#ffff00']],
+                showscale=False
             ))
             fig_sal.update_layout(
                 template="plotly_dark",
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                margin=dict(l=0, r=0, t=0, b=0),
-                height=250,
+                margin=dict(l=5, r=5, t=5, b=5),
+                height=220,
                 xaxis=dict(showticklabels=False, showgrid=False),
                 yaxis=dict(showticklabels=False, showgrid=False, scaleanchor="x", scaleratio=1)
             )
-            st.plotly_chart(fig_sal)
-            st.caption("Red = High Attention | Blue = Low Attention")
+            st.plotly_chart(fig_sal, width="stretch")
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.caption("Attention Gradient Heatmap")
         
         with vis_col3:
-            st.markdown("**📊 Confidence Distribution**")
+            st.markdown("""
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <span style="font-family: 'Orbitron'; color: #00fff2; font-size: 0.7rem;">[ 📊 INFERENCE_CONFIDENCE ]</span>
+                </div>
+            """, unsafe_allow_html=True)
             fig_conf = go.Figure(data=go.Bar(
                 x=[f"{i}" for i in range(10)],
                 y=confidences * 100,
                 marker=dict(
-                    color=['#ff0066' if i == digit_class else '#00d4ff' for i in range(10)],
-                    line=dict(color='#fff', width=1)
-                )
+                    color=['rgba(255, 0, 102, 0.4)' if i == digit_class else 'rgba(0, 212, 255, 0.4)' for i in range(10)],
+                    line=dict(color=['#ff0066' if i == digit_class else '#00d4ff' for i in range(10)], width=2)
+                ),
+                text=[f"{v*100:.1f}%" if v > 0.05 else "" for v in confidences],
+                textposition='outside',
+                textfont=dict(color="#fff", family="Rajdhani")
             ))
             fig_conf.update_layout(
                 template="plotly_dark",
@@ -1465,17 +1740,25 @@ with tab_xai:
                 height=250,
                 xaxis_title="Digit Class",
                 yaxis_title="Confidence (%)",
-                yaxis=dict(range=[0, 100])
+                yaxis=dict(range=[0, 110], gridcolor='rgba(255,255,255,0.05)'),
+                xaxis=dict(showgrid=False)
             )
-            st.plotly_chart(fig_conf)
+            st.plotly_chart(fig_conf, width="stretch")
             st.caption(f"Prediction: **{digit_class}** ({confidences[digit_class]*100:.1f}% confidence)")
         
         # Explanation text
-        st.info(f"""
-        **🧠 Interpretation:** The model focuses on the highlighted regions (red areas) when classifying this as digit "{digit_class}".
-        The saliency map shows which pixels have the highest gradient magnitude with respect to the predicted class.
-        High attention areas indicate features the model considers most discriminative for this classification.
-        """)
+        st.markdown(f"""
+            <div class="cyber-terminal" style="padding: 1.5rem; margin-top: 20px;">
+                <div style="color: #ff0066; font-family: 'Orbitron'; font-size: 0.7rem; margin-bottom: 10px;">>> RECONNAISSANCE REPORT_</div>
+                <div style="color: #00d4ff; line-height: 1.6;">
+                    🧠 <b>Neural Signature Interpretation:</b> The model is focusing on the <span style="color: #ff0066;">highlighted spectral regions</span> 
+                    when classifying this entity as <b>Digit {digit_class}</b>. 
+                    The saliency map illuminates the exact pixel-level gradients where the global model weights are most sensitive. 
+                    <br><br>
+                    <i>High attention zones indicate features the model considers most discriminative for this classification task.</i>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
     else:
         st.info("👆 Select a client and click 'Generate Saliency Map' to visualize model attention")
 
@@ -1564,63 +1847,102 @@ with tab_3d:
         # Crop high peaks to focus on the optimization valley
         z_limit = max(start['loss'] * 1.2, 0.5)
 
+        st.markdown("""
+            <div style="background: rgba(0, 255, 242, 0.02); border-left: 4px solid #00d4ff; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
+                <div style="font-family: 'Orbitron'; font-size: 0.8rem; color: #00d4ff; letter-spacing: 2px;">🏔️ TOPOGRAPHICAL EXPEDITION ACTIVE</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Scanner Frame for 3D plot
+        st.markdown("""
+            <div style="border: 1px solid rgba(0,212,255,0.2); border-radius: 12px; background: rgba(0,0,0,0.3); padding: 5px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(255,255,255,0.05);"></div>
+                <div style="position: absolute; top: 0; left: 0; width: 20px; height: 20px; border-top: 2px solid #00fff2; border-left: 2px solid #00fff2;"></div>
+                <div style="position: absolute; top: 0; right: 0; width: 20px; height: 20px; border-top: 2px solid #00fff2; border-right: 2px solid #00fff2;"></div>
+                <div style="position: absolute; bottom: 0; left: 0; width: 20px; height: 20px; border-bottom: 2px solid #00fff2; border-left: 2px solid #00fff2;"></div>
+                <div style="position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-bottom: 2px solid #00fff2; border-right: 2px solid #00fff2;"></div>
+        """, unsafe_allow_html=True)
+
         fig_3d.update_layout(
-            title=dict(text="Loss Landscape Expedition", font=dict(family="Orbitron", size=16, color="#fff")),
             template="plotly_dark",
             paper_bgcolor='rgba(0,0,0,0)',
-            height=500,
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=600,
+            margin=dict(l=0, r=0, t=20, b=0),
             scene=dict(
-                xaxis_title="PCA Dim 1",
-                yaxis_title="PCA Dim 2",
-                zaxis_title="Loss",
-                # CLAMP Z-AXIS to show the valley
-                zaxis=dict(range=[0, z_limit]),
-                camera=dict(eye=dict(x=1.5, y=1.5, z=1.2)),
+                xaxis=dict(title="PCA_X", gridcolor='rgba(255,255,255,0.05)', showbackground=False),
+                yaxis=dict(title="PCA_Y", gridcolor='rgba(255,255,255,0.05)', showbackground=False),
+                zaxis=dict(title="LOSS", range=[0, z_limit], gridcolor='rgba(255,255,255,0.05)', showbackground=False),
+                camera=dict(eye=dict(x=1.8, y=1.8, z=1.2)),
                 bgcolor='rgba(0,0,0,0)'
             ),
-            legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0.5)')
+            legend=dict(x=0.01, y=0.99, bgcolor='rgba(0,0,0,0.6)', font=dict(family="Rajdhani", size=10))
         )
         st.plotly_chart(fig_3d, width="stretch")
+        st.markdown("</div>", unsafe_allow_html=True)
         
-        # Metrics row
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Metrics row with holo-cards
         met_c1, met_c2, met_c3, met_c4 = st.columns(4)
         with met_c1:
-            st.metric("🏔️ Start Loss", f"{start['loss']:.3f}")
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(255,255,255,0.2);">
+                    <div class="holo-label">Start Loss 🚩</div>
+                    <div class="holo-value" style="color: #fff; font-size: 1.5rem;">{start['loss']:.3f}</div>
+                    <div class="holo-delta" style="color: rgba(255,255,255,0.3);">Baseline Latency</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with met_c2:
-            st.metric("🏆 Current Loss", f"{latest['loss']:.3f}", delta=f"{latest['loss'] - start['loss']:.3f}")
+            loss_diff = latest['loss'] - start['loss']
+            diff_color = "#ff6b6b" if loss_diff > 0 else "#00ff88"
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(0,255,242,0.5);">
+                    <div class="holo-label">Current Loss 🏆</div>
+                    <div class="holo-value" style="color: #00fff2; font-size: 1.5rem;">{latest['loss']:.3f}</div>
+                    <div class="holo-delta" style="color: {diff_color};">{loss_diff:+.3f} from start</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with met_c3:
             descent = start['loss'] - latest['loss']
-            st.metric("📉 Total Descent", f"{descent:.3f}")
+            st.markdown(f'''
+                <div class="holo-card" style="border-color: rgba(255,0,255,0.3);">
+                    <div class="holo-label">Total Descent 📉</div>
+                    <div class="holo-value" style="color: #ff00ff; font-size: 1.5rem;">{descent:.3f}</div>
+                    <div class="holo-delta" style="color: rgba(255,0,255,0.3);">Gradient Flow</div>
+                </div>
+            ''', unsafe_allow_html=True)
         with met_c4:
-            # Recalibrated Sharpness Logic
-            # High accuracy (>90%) implies Flat/Wide minima despite local variance
             if len(traj_df) > 3:
                 recent_losses = traj_df['loss'].tail(5)
                 sharpness = recent_losses.std()
-                
-                # Apply bias for high-accuracy models (assumption: they found a good minima)
                 current_acc = latest.get('acc', 0.0)
-                if current_acc > 0.90:
-                    sharpness *= 0.1  # Strong bias towards stable
-                    
+                if current_acc > 0.90: sharpness *= 0.1
+                
                 if sharpness < 0.2:
-                    topology = "Wide (Stable)"  # Changed from Flat to Wide
-                    color = "🟢"
+                    topology, color_hex, emoji = "Wide (Stable)", "#00ff88", "🟢"
                 elif sharpness < 0.5:
-                    topology = "Moderate"
-                    color = "🟡"
+                    topology, color_hex, emoji = "Moderate", "#ffff00", "🟡"
                 else:
-                    topology = "Sharp (Brittle)"
-                    color = "🔴"
-                st.metric(f"{color} Minima Topology", topology)
+                    topology, color_hex, emoji = "Sharp (Brittle)", "#ff6b6b", "🔴"
+                    
+                st.markdown(f'''
+                    <div class="holo-card" style="border-color: {color_hex}80;">
+                        <div class="holo-label">Minima Topology {emoji}</div>
+                        <div class="holo-value" style="color: {color_hex}; font-size: 1.1rem;">{topology}</div>
+                        <div class="holo-delta" style="color: {color_hex}40;">Stability Index</div>
+                    </div>
+                ''', unsafe_allow_html=True)
             else:
-                st.metric("🏞️ Minima Topology", "Analyzing...")
+                 st.markdown(f'''
+                    <div class="holo-card" style="border-color: rgba(255,255,255,0.1);">
+                        <div class="holo-label">Minima Topology 🏞️</div>
+                        <div class="holo-value" style="color: #666; font-size: 1.1rem;">ANALYZING...</div>
+                        <div class="holo-delta" style="color: #444;">Gathering Data</div>
+                    </div>
+                ''', unsafe_allow_html=True)
         
         # Algorithm comparison insight
-        st.markdown("---")
-        st.markdown("**🎯 Expedition Analysis**")
-        
-        # Calculate path smoothness
         if len(traj_df) > 2:
             diffs = np.diff(traj_df[['x', 'y']].values, axis=0)
             path_lengths = np.sqrt(np.sum(diffs**2, axis=1))
@@ -1628,10 +1950,19 @@ with tab_3d:
             direct_dist = np.sqrt((latest['x'] - start['x'])**2 + (latest['y'] - start['y'])**2)
             efficiency = direct_dist / max(total_path, 0.001)
             
-            if algo == "FedProx":
-                st.success(f"🛤️ **FedProx** path efficiency: **{efficiency*100:.1f}%** (smoother descent)")
-            else:
-                st.info(f"🛤️ **{algo}** path efficiency: **{efficiency*100:.1f}%**")
+            st.markdown(f"""
+                <div class="cyber-terminal" style="padding: 1.5rem; margin-top: 10px; height: auto;">
+                    <div style="color: #00d4ff; font-family: 'Orbitron'; font-size: 0.7rem; margin-bottom: 10px;">>> EXPEDITION LOG REPORT_</div>
+                    <div style="color: #fff; line-height: 1.6; font-family: 'Rajdhani';">
+                        🛤️ <b>Optimization Path Efficiency:</b> <span style="color: #00ff88; font-weight: bold;">{efficiency*100:.1f}%</span>
+                        <br>
+                        <span style="color: #888;">Algorithm Configuration: <b>{algo}</b></span>
+                        <br><br>
+                        <i>The model has successfully navigated through the parameter hyperspace. 
+                        A higher efficiency indicates a more direct and stable gradient descent towards the global minima.</i>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
         
         st.caption("💡 Rotate, zoom, and pan the 3D view to explore the loss landscape from different angles!")
     else:
@@ -1903,7 +2234,6 @@ if st.session_state.running:
             st.session_state.security.step_accounting(q_ratio)
         except Exception as e:
             log(f"⛔ {str(e)}", warn=True)
-            st.error(f"SIMULATION HALTED: {str(e)}")
             st.session_state.running = False
             st.rerun()
 
