@@ -220,4 +220,4 @@ streamlit run app.py
 
 ---
 
-**Built with ❤️ by the Advanced Agentic Coding Team**
+**Built with ❤️ by Yusuf Calisir**
