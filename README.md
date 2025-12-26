@@ -15,11 +15,11 @@
 ### 🚀 The Mission
 To provide researchers and system architects with a **high-fidelity command center** that bridges the gap between theoretical math and practical deployment.
 *   **Demystify Optimization:** See exactly *how* and *why* a model converges (or diverges) via dynamic 3D Loss Landscapes.
-*   **Stress Test Robustness:** Simulate adversarial conditions—including System Stragglers, Concept Drift, and Data Poisoning—in a controlled environment.
+*   **Stress Test Robustness:** Simulate adversarial conditions including System Stragglers, Concept Drift, and Data Poisoning in a controlled environment.
 *   **Verify Privacy:** Visually confirm the efficacy of Differential Privacy noise and Secure Aggregation protocols.
 
 ### 💡 Core Solution
-Unlike static plotting tools, FedVisualizer acts as a **live, interactive digital twin** of your FL network. It decouples simulation logic from rendering to enable real-time observability without compromising training throughput.
+Unlike static plotting tools, FedVisualizer acts as a **live, interactive digital twin** of your FL network. It decouples simulation logic from rendering to enable real time observability without compromising training throughput.
 
 ---
 
