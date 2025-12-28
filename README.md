@@ -7,7 +7,7 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
 
-> 🚀 **Live Demo:** [fed-visualizer.streamlit.app](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+> 🚀 **Live Demo:** [fed-visualizer.streamlit.app](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/) 
 
 > 📄 **Technical Report (PDF):** [Full Project Documentation & Analysis](https://drive.google.com/file/d/1r_tcRJJRY75b65J5XWhh-uzspElrZG7i/view?usp=sharing)
 
