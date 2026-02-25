@@ -7,9 +7,12 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
 
-> 🚀 **Live Demo:** [fed-visualizer.streamlit.app](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/) 
+<div align="center">
 
-> 📄 **Technical Report (PDF):** [Full Project Documentation & Analysis](https://drive.google.com/file/d/1r_tcRJJRY75b65J5XWhh-uzspElrZG7i/view?usp=sharing)
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Fed--Visualizer-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+[![Technical Report](https://img.shields.io/badge/TECHNICAL_REPORT-Documentation-007bff?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1r_tcRJJRY75b65J5XWhh-uzspElrZG7i/view?usp=sharing)
+
+</div>
 
 > **"Where Cyberpunk Aesthetics Meet Rigorous Scientific Simulation."**
      
