@@ -9,8 +9,8 @@
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Fed--Visualizer-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
-[![Technical Report](https://img.shields.io/badge/TECHNICAL_REPORT-Documentation-007bff?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1r_tcRJJRY75b65J5XWhh-uzspElrZG7i/view?usp=sharing)
+[![Live Demo](https://img.shields.io/badge/Fed--Visualizer-Live_Demo-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+[![Technical Report](https://img.shields.io/badge/Fed--Visualizer-Tech_Report-007bff?style=for-the-badge&logo=google-drive&logoColor=white)](https://drive.google.com/file/d/1r_tcRJJRY75b65J5XWhh-uzspElrZG7i/view?usp=sharing)
 
 </div>
 
