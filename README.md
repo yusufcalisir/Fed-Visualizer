@@ -16,7 +16,7 @@
 
 > **"Where Cyberpunk Aesthetics Meet Rigorous Scientific Simulation."**
      
-## 🎯 Overview 
+## 🎯 Overview  
 
 **FedVisualizer** is a production-ready research platform designed to solve the **"Observability Gap"** in distributed machine learning. While traditional Federated Learning (FL) frameworks focus purely on algorithmic execution, they often act as "black boxes," obscuring critical network dynamics, client heterogeneity, and security vulnerabilities.
 
