@@ -13,7 +13,7 @@ jobs:
       - name: Ping Streamlit Application
         run: |
           echo "Pinging FedVisualizer Streamlit App..."
-          STATUS_CODE=$(curl -L -s -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 45 https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+          STATUS_CODE=$(curl -L -b cookies.txt -c cookies.txt -s -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 45 https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
           echo "HTTP Response Status Code: $STATUS_CODE"
           if [ "$STATUS_CODE" -eq 200 ] || [ "$STATUS_CODE" -eq 301 ] || [ "$STATUS_CODE" -eq 302 ]; then
             echo "Success: Application is awake and responding."
