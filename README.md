@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-5.15+-3F4F75?style=flat-square&logo=plotly&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/sklearn-1.0+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/sklearn-1.0+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white) 
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
 
