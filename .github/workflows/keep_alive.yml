@@ -1,0 +1,22 @@
+name: Keep Streamlit App Alive
+
+on:
+  schedule:
+    # Runs at 08:00 and 20:00 UTC every day to prevent hibernation
+    - cron: '0 8,20 * * *'
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit Application
+        run: |
+          echo "Pinging FedVisualizer Streamlit App..."
+          STATUS_CODE=$(curl -L -s -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 45 https://fed-visualizer-uccvopbs6gjvhxnuvx5eyz.streamlit.app/)
+          echo "HTTP Response Status Code: $STATUS_CODE"
+          if [ "$STATUS_CODE" -eq 200 ] || [ "$STATUS_CODE" -eq 301 ] || [ "$STATUS_CODE" -eq 302 ]; then
+            echo "Success: Application is awake and responding."
+          else
+            echo "Warning: Received unexpected status code: $STATUS_CODE"
+          fi
